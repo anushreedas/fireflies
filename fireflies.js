@@ -1,5 +1,6 @@
  let tree= [];
  let fireflies=[];
+ let star=[];
  var pathTime=0;
  var glowTimer=0;
  var direction=3;
@@ -8,7 +9,7 @@
  var expandContract=0;
   var direction2=3;
   var pathTime2=0;
-  
+  var starCount=500;
   var col= {
   r:255,
   g:255,
@@ -28,6 +29,8 @@ function preload() {
         c2 = color(0);
         for(var i=0;i<maxTrees;i++)
          tree[i]=new Tree();
+        for(var k=0;k<starCount;k++)
+          star[k]=new Stars();
  	 dim = 15;
          ellipseMode(RADIUS);
          frameRate(100);
@@ -42,9 +45,16 @@ function draw() {
       stroke(c);
       line(0, i, windowWidth, i);
     }
+    noStroke();
+   //var pointillize = map(mouseX, 0, width, smallPoint, largePoint);
+  var x = floor(random(windowWidth));
+  var y = floor(random(windowHeight));
+
+  for(var k=0;k<starCount;k++)
+          drawGradient(star[k].x,star[k].y,star[k].d);
    fill(0);
    arc(windowWidth/2, windowHeight, windowWidth/2, 50, PI,TWO_PI, OPEN);
-   noStroke();
+
    for(var i=0;i<maxTrees;i++)
          tree[i].drawTree();
    for(var j=0;j<maxFlies;j++)
@@ -55,11 +65,22 @@ function draw() {
      if(expandContract==0){dim-=0.5;z++;if(z==3) expandContract=1;}
     else if(expandContract==1){dim+=0.5;z--; if(z==0) expandContract=0;}
     }
+
    for(var j=0;j<maxFlies;j++)
        fireflies[j].changeDir();
    for(var j=0;j<maxFlies;j++)
          fireflies[j].Move( fireflies[j].dir);
 }
+
+class Stars
+{
+  constructor (){
+     this.x=random(-20,windowWidth);
+     this.y=random(0,windowHeight);
+     this.d=random(0,1);
+  }
+}
+
  class Tree
   {
     constructor (){
@@ -123,6 +144,17 @@ class firefly
   }
 }
 }
+function   drawGradient(X, Y,D) {
+   var radius = D+(dim/10);
+    var from = color(255, 255, 255, 0.2 * 255);
+    var to = color(200, 150, 255, 0.2 * 255);
+   col=lerpColor(from, to, .33);
+    for (var r = radius; r > 0; r-=1) {
+    fill(col, 90, 90);
+    ellipse(X,Y, r, r);//console.log(r);
+   }
+  }
+
 function   drawGradient2(X, Y) {
    var radius = dim/2;
     var from = color(255, 255, 0, 0.2 * 255);
