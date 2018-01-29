@@ -1,5 +1,5 @@
- let firefly1, firefly2, firefly3, firefly4, firefly5, firefly6, firefly7, firefly8, firefly9, firefly10;
- let tree1= [];
+ let tree= [];
+ let fireflies=[];
  var pathTime=0;
  var glowTimer=0;
  var direction=3;
@@ -17,6 +17,7 @@
  var img;
  var pos;
  var maxTrees=80;
+ var maxFlies=30;
 function preload() {
   img = loadImage('assets/treeSilhouette.png');
 }
@@ -26,20 +27,12 @@ function preload() {
         c1 = color(0, 10, 80);
         c2 = color(0);
         for(var i=0;i<maxTrees;i++)
-         tree1[i]=new Tree();
- 	dim = 15;
+         tree[i]=new Tree();
+ 	 dim = 15;
          ellipseMode(RADIUS);
          frameRate(100);
-         firefly1=new firefly(random(0,windowWidth),random(0,windowHeight),1);
-         firefly2=new firefly(random(0,windowWidth),random(0,windowHeight),2);
-         firefly3=new firefly(random(0,windowWidth),random(0,windowHeight),3);
-         firefly4=new firefly(random(0,windowWidth),random(0,windowHeight),4);
-         firefly5=new firefly(random(0,windowWidth),random(0,windowHeight),1);
-         firefly6=new firefly(random(0,windowWidth),random(0,windowHeight),2);
-         firefly7=new firefly(random(0,windowWidth),random(0,windowHeight),4);
-         firefly8=new firefly(random(0,windowWidth),random(0,windowHeight),2);
-         firefly9=new firefly(random(0,windowWidth),random(0,windowHeight),3);
-         firefly10=new firefly(random(0,windowWidth),random(0,windowHeight),2);
+         for(var j=0;j<maxFlies;j++)
+            fireflies[j]=new firefly(random(0,windowWidth),random(0,windowHeight));
  }
 function draw() {
    background(0);
@@ -53,44 +46,19 @@ function draw() {
    arc(windowWidth/2, windowHeight, windowWidth/2, 50, PI,TWO_PI, OPEN);
    noStroke();
    for(var i=0;i<maxTrees;i++)
-         tree1[i].drawTree();
-   drawGradient2(firefly1.x, firefly1.y);
-   drawGradient2(firefly2.x, firefly2.y);
-   drawGradient2(firefly3.x, firefly3.y);
-   drawGradient2(firefly4.x, firefly4.y);
-   drawGradient2(firefly5.x, firefly5.y);
-   drawGradient2(firefly6.x, firefly6.y);
-   drawGradient2(firefly7.x, firefly7.y);
-   drawGradient2(firefly8.x, firefly8.y);
-   drawGradient2(firefly9.x, firefly9.y);
-   drawGradient2(firefly10.x, firefly10.y);
-
+         tree[i].drawTree();
+   for(var j=0;j<maxFlies;j++)
+           drawGradient2(fireflies[j].x,fireflies[j].y);
+   
    glowTimer++;
    if(parseInt(glowTimer)%2==0){
      if(expandContract==0){dim-=0.5;z++;if(z==3) expandContract=1;}
     else if(expandContract==1){dim+=0.5;z--; if(z==0) expandContract=0;}
     }
-   firefly1.changeDir();
-   firefly2.changeDir();
-   firefly3.changeDir();
-   firefly4.changeDir();
-   firefly5.changeDir();
-   firefly6.changeDir();
-   firefly7.changeDir();
-   firefly8.changeDir();
-   firefly9.changeDir();
-   firefly10.changeDir();
-
-   firefly1.Move(firefly1.dir);
-   firefly2.Move(firefly2.dir);
-   firefly3.Move(firefly3.dir);
-   firefly4.Move(firefly4.dir);
-   firefly5.Move(firefly5.dir);
-   firefly6.Move(firefly6.dir);
-   firefly7.Move(firefly7.dir);
-   firefly8.Move(firefly8.dir);
-   firefly9.Move(firefly9.dir);
-   firefly10.Move(firefly10.dir);
+   for(var j=0;j<maxFlies;j++)
+       fireflies[j].changeDir();
+   for(var j=0;j<maxFlies;j++)
+         fireflies[j].Move( fireflies[j].dir);
 }
  class Tree
   {
@@ -111,10 +79,10 @@ function draw() {
 class firefly
 {
 
-  constructor(X,Y,d){
+  constructor(X,Y){
     this.x=X;
     this.y=Y;
-    this.dir=d;
+    this.dir=parseInt(random(0,5));
     this.pathTime=0;
     this.up=random(100,1000);
   }
