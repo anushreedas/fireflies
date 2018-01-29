@@ -1,4 +1,5 @@
  let firefly1, firefly2, firefly3, firefly4, firefly5, firefly6, firefly7, firefly8, firefly9, firefly10;
+ let tree1= [];
  var pathTime=0;
  var glowTimer=0;
  var direction=3;
@@ -13,10 +14,19 @@
   g:255,
   b:255,
 };
+ var img;
+ var pos;
+ var maxTrees=80;
+function preload() {
+  img = loadImage('assets/treeSilhouette.png');
+}
 
  function setup() {
  	createCanvas(windowWidth, windowHeight);
-
+        c1 = color(0, 10, 80);
+        c2 = color(0);
+        for(var i=0;i<maxTrees;i++)
+         tree1[i]=new Tree();
  	dim = 15;
          ellipseMode(RADIUS);
          frameRate(100);
@@ -33,8 +43,17 @@
  }
 function draw() {
    background(0);
+   for (var i = 0; i <= windowHeight; i++) {
+      var inter = map(i, 0, 0+windowHeight, 0, 1);
+      var c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(0, i, windowWidth, i);
+    }
+   fill(0);
+   arc(windowWidth/2, windowHeight, windowWidth/2, 50, PI,TWO_PI, OPEN);
    noStroke();
-
+   for(var i=0;i<maxTrees;i++)
+         tree1[i].drawTree();
    drawGradient2(firefly1.x, firefly1.y);
    drawGradient2(firefly2.x, firefly2.y);
    drawGradient2(firefly3.x, firefly3.y);
@@ -73,6 +92,21 @@ function draw() {
    firefly9.Move(firefly9.dir);
    firefly10.Move(firefly10.dir);
 }
+ class Tree
+  {
+    constructor (){
+      this.x=random(-20,windowWidth);
+      this.y=random(3*windowHeight/4,(3*windowHeight/4)+50);
+      this.w=random(60,100);
+      this.h=random(200,250);
+    }
+
+     drawTree()
+    {
+       image(img,this.x,this.y,this.w,250);
+    }
+   }
+   
 
 class firefly
 {
